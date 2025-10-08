@@ -4,7 +4,10 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h1 class="id_class">Welcome to My Page</h1>
+    <h1 class="id_class"></h1>
+    {% for name in student %} {% if name == "Ali" %}
+    <p>{{name}}</p>
+    {% endif %} {% endfor %}
     <p class="id_class">This is <a href="http://127.0.0.1:8000/start.html">Visit Example</a> a paragraph.</p>
     <a href="https://example.com">Visit Example</a>
     <svg

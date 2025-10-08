@@ -6,4 +6,4 @@ class Task(models.Model):
     done = models.BooleanField(default=False)
     category = models.CharField(max_length=64)
     description = models.TextField()
-    date = models.DateField()
+    # date = models.DateField()
