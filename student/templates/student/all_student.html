@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Page Title</title>
+  </head>
+  <body>
+    <h1>Students Page</h1>
+    <ul>
+      {% for student in students%}
+      <li>{{student.fullname}}: {{student.score}}</li>
+      {% endfor %}
+    </ul>
+  </body>
+</html>
