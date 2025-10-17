@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from todo.models import Task
+from student.models import Student, Course
 
 
 def len2(text):
@@ -23,9 +24,10 @@ def home_view2(request):
 
 
 def task_view(request):
-    tasks = list(Task.objects.all())
-    context = {"list_tasks": tasks}
-    return render(request, 'todo/start.html', context)
+    if request.method == "GET":
+        tasks = list(Task.objects.all())
+        context = {"list_tasks": tasks}
+        return render(request, 'todo/start.html', context)
 
 
 def task_view2(request):
@@ -35,3 +37,22 @@ def task_view2(request):
         titles.append(obj.title)
     context = {"tasks_titles": titles}
     return render(request, 'todo/start.html', context)
+
+
+def task_student(request, st_id):
+
+    student_obj = Student.objects.get(id=st_id)
+    Task.objects.create(
+        title="new task",
+        done=False,
+        category="sport",
+        description="desc new task",
+        student=student_obj
+    )
+
+    course = Course.objects.get(code=1)
+    course.students.add(student_obj)
+
+    tasks_student = Task.objects.filter(student_id=st_id)
+    context = {"tasks": tasks_student}
+    return render(request, "todo/list_student_1.html", context)

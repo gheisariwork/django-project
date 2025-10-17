@@ -7,7 +7,7 @@ class Task(models.Model):
     done = models.BooleanField(default=False)
     category = models.CharField(max_length=64)
     description = models.TextField()
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE, related_name="tasks")
 
     def __str__(self):
         return self.title

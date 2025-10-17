@@ -7,7 +7,13 @@
     <h1>Students Page</h1>
     <ul>
       {% for student in students%}
-      <li>{{student.fullname}}: {{student.score}}</li>
+        <li>{{student.fullname}}: {{student.score}}</li>
+        {% for course in student.courses.all %}
+          <p>{{course.title}}</p>
+        {% endfor %} 
+        {% for task in student.tasks.all %}
+          <p>{{task.title}}</p>
+        {% endfor %}
       {% endfor %}
     </ul>
   </body>
