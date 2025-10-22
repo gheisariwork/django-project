@@ -1,12 +1,27 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from student.models import Student, Course
+from student.forms import StudentForm
 
 
 def student_view(request):
-    all_students = Student.objects.filter(score__gt=15)
-    context = {"students": all_students}
+    form = StudentForm()
     html_file = "student/all_student.html"
-    return render(request, html_file, context)
+    if request.method == "GET":
+        all_students = Student.objects.all()
+        context = {"students": all_students, "form": form}
+        return render(request, html_file, context)
+    elif request.method == "POST":
+        d = StudentForm(request.POST)
+        if d.is_valid():
+            saved_obj = d.save()
+        # data = request.POST
+        # fullname1 = data["fullname"]
+        # username1 = data["username"]
+        # phone1 = data["phone_number"]
+        # student_object = Student.objects.create(fullname=fullname1, username=username1, phone_number=phone1, score=0)
+            if saved_obj:
+                return redirect("todo:home")
+        return render(request, html_file, {"form": form})
 
 
 def courses_view(request):

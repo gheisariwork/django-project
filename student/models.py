@@ -4,8 +4,10 @@ from django.db import models
 class Student(models.Model):
     fullname = models.CharField(max_length=64)
     username = models.CharField(max_length=64)
-    score = models.PositiveIntegerField()
+    score = models.PositiveIntegerField(default=0)
     phone_number = models.CharField(max_length=13)
+    img = models.ImageField(upload_to="images/%Y/%m/", null=True)
+    file = models.FileField(upload_to="files/%Y/%m/", null=True)
 
     def __str__(self):
         return self.fullname

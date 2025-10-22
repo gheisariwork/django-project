@@ -7,14 +7,24 @@
     <h1>Students Page</h1>
     <ul>
       {% for student in students%}
-        <li>{{student.fullname}}: {{student.score}}</li>
-        {% for course in student.courses.all %}
-          <p>{{course.title}}</p>
-        {% endfor %} 
-        {% for task in student.tasks.all %}
-          <p>{{task.title}}</p>
-        {% endfor %}
+        {% if student.img %}
+          <li>{{student.fullname}}: {{student.score}}</li>
+          <img src={{student.img.url}}>
+          {% for course in student.courses.all %}
+            <p>{{course.title}}</p>
+          {% endfor %} 
+          {% for task in student.tasks.all %}
+            <p>{{task.title}}</p>
+          {% endfor %}
+        {% endif %}
       {% endfor %}
     </ul>
+
+    <form action={% url "student:student_list" %} method="post">
+      {% csrf_token %}
+      {{ form }}
+      <input type="submit" value="ورود">
+    </form>
+
   </body>
 </html>

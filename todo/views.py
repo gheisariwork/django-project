@@ -42,6 +42,11 @@ def task_view2(request):
 def task_student(request, st_id):
 
     student_obj = Student.objects.get(id=st_id)
+    if student_obj.fullname == "mohamad":
+        student_obj.fullname = "ali"
+    elif student_obj.fullname == "ali":
+        student_obj.fullname == "mohamad"
+
     Task.objects.create(
         title="new task",
         done=False,
