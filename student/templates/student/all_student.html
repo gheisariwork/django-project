@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Page Title</title>
-  </head>
-  <body>
-    <h1>Students Page</h1>
-    <ul>
+{% extends "student_base.html" %}
+
+{% block content %}
+  <ul>
       {% for student in students%}
         {% if student.img %}
           <li>{{student.fullname}}: {{student.score}}</li>
@@ -20,11 +16,9 @@
       {% endfor %}
     </ul>
 
-    <form action={% url "student:student_list" %} method="post">
+    <form action={% url "student:student_list_new" %} method="post">
       {% csrf_token %}
-      {{ form }}
+      {{ form.as_p }}
       <input type="submit" value="ورود">
     </form>
-
-  </body>
-</html>
+{% endblock %}
