@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib.auth.models import User
-from account.forms import UserRegisterForm
+from account.forms import *
+from django.contrib.auth import authenticate, login, logout
+# from django.contrib.auth.forms import AuthenticationForm
 
 
 class RegisterView(View):
@@ -19,9 +21,35 @@ class RegisterView(View):
                 email="",
                 password=request.POST["password"]
             )
-            # new_user = st_form.save()
             if new_user:
                 return redirect("todo:home")
         return render(request, self.template,
                       {"form": self.form, "message": "یوزرنیم یا پسورد اشتباه یا تکراری است"}
                       )
+
+
+class LoginView(View):
+    form = UserLoginForm()
+    template = "account/login.html"
+
+    def get(self, request):
+        return render(request, self.template, {"form": self.form})
+
+    def post(self, request):
+        form_data = UserLoginForm(request.POST)
+
+        # if form_data.is_valid():
+        user = authenticate(username=request.POST["username"],
+                            password=request.POST["password"])
+
+        if user and user.is_authenticated:
+            login(request, user)
+            return redirect("student:add-course")
+        return render(request, self.template, {"form": self.form, "message": "یوزر یا پسورد اشتباه است"})
+
+
+class LogoutView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            logout(request)
+        return redirect("account:user-login")

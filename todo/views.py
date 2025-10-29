@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from todo.models import Task
 from student.models import Student, Course
+from django.views import View
 
 
 def len2(text):
@@ -54,6 +55,8 @@ def task_student(request, st_id):
         description="desc new task",
         student=student_obj
     )
+
+    Task.objects.bulk_create(tasks)
 
     course = Course.objects.get(code=1)
     course.students.add(student_obj)

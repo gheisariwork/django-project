@@ -15,7 +15,7 @@
         {% endif %}
       {% endfor %}
     </ul>
-
+    <p>{{message}}</p>
     <form action={% url "student:student_list_new" %} method="post">
       {% csrf_token %}
       {{ form.as_p }}

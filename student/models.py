@@ -27,7 +27,7 @@ class Course(models.Model):
 
 class Profile(models.Model):
     bio = models.TextField()
-    avatar = models.CharField(max_length=128)
+    avatar = models.ImageField(upload_to="images/%Y/%m/", null=True)
     student = models.OneToOneField(Student, related_name="profile", on_delete=models.CASCADE)
 
     def __str__(self):
