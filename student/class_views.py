@@ -66,3 +66,10 @@ class AddProfileView(View):
         # form_data.save()
         return redirect("todo:home")
         # return render(request, self.html, {"form": ProfileForm()})
+
+
+class AllTeachersView(View):
+    html = "student/teachers.html"
+    def get(self, request):
+        teachers = Teacher.objects.all()
+        return render(request, self.html, {"teachers": teachers})

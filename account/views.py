@@ -44,7 +44,7 @@ class LoginView(View):
 
         if user and user.is_authenticated:
             login(request, user)
-            return redirect("student:add-course")
+            return redirect("student:add_course")
         return render(request, self.template, {"form": self.form, "message": "یوزر یا پسورد اشتباه است"})
 
 
@@ -53,3 +53,13 @@ class LogoutView(View):
         if request.user.is_authenticated:
             logout(request)
         return redirect("account:user-login")
+
+class DeleteView(View):
+    def get(self, request):
+        if request.user.is_authenticated:
+            try:
+                user = User.objects.get(id=request.user.id)
+                user.delete()
+                return redirect("todo:home")
+            except:
+                return redirect("student:add_course")
