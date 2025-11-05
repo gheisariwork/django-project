@@ -3,9 +3,9 @@ from student.models import *
 from student.forms import *
 from django.shortcuts import render, redirect
 from django.core.exceptions import ObjectDoesNotExist
+from django.contrib.auth.mixins import LoginRequiredMixin
 
-
-class AllStudentsView(View):
+class AllStudentsView(LoginRequiredMixin, View):
     html_file = "student/all_student.html"
     form = StudentForm()
 
