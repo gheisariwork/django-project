@@ -6,6 +6,9 @@ class Student(models.Model):
     score = models.PositiveIntegerField(default=0)
     profile = models.OneToOneField("Profile", on_delete=models.CASCADE, blank=True, null=True)
 
+    def __str__(self):
+        return self.fullname
+
 
 class Teacher(models.Model):
     fullname = models.CharField(max_length=64)
@@ -20,6 +23,7 @@ class Course(models.Model):
     end_date = models.DateField()
     students = models.ManyToManyField(Student, related_name="courses")
     teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE, null=True, blank=True, related_name="courses")
+    is_active = models.BooleanField(default=True)
 
 
 class Profile(models.Model):
