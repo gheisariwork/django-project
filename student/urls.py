@@ -1,9 +1,14 @@
-from django.urls import path
+from django.urls import path, include
 from student.views import student_view, courses_view
 from student.class_views import *
 from student.api import *
+from rest_framework.routers import DefaultRouter
 
 app_name = "student"
+
+router = DefaultRouter()
+
+router.register("all-courses", CourseViewset, basename="all-courses")
 
 urlpatterns = [
     path("all-courses/", AllCoursesView.as_view(), name="all-courses"),
@@ -16,4 +21,8 @@ urlpatterns = [
     # api urls
     path("api/all-students/", AllStudentApiView.as_view()),
     path("api/all-students/<int:pk>/", AllStudentApiView.as_view()),
+    path("api/courses/enroll/", EnrollApiView.as_view()),
+    path("api/", include(router.urls))
+
+    # path("api/all-courses/", CourseViewset.as_view())
 ]
