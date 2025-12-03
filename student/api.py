@@ -4,31 +4,36 @@ from student.models import *
 from rest_framework.response import Response
 from rest_framework import status
 from django.core.exceptions import ObjectDoesNotExist
-from student.serializers import StudentSerializer, CourseSerializer
+from student.serializers import *
 from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
+from student.permissions import *
+from student.paginations import NewPagination
+from django_filters.rest_framework import DjangoFilterBackend
+from student.filters import CourseFilter
+# from django_filters.filters import 
 
 class AllStudentApiView(APIView):
     def get(self, request, pk=None):
+        print(request.GET.get("page"))
         if pk:
             student = Student.objects.get(id=pk)
-            return Response({
-                "name": student.fullname,
-                "score": student.score
-            })
+            srz_data = StudentSerializer(instance=student)
+            return Response(srz_data.data)
         else:
-            student_names = Student.objects.all().values_list("fullname", flat=True)
-            students_dict = {"names": student_names}
-            print(students_dict)
-            return Response(students_dict)
+            students = Student.objects.all()
+            srz_data = StudentSerializer(instance=students, many=True)
+            return Response(srz_data.data)
     
     def post(self, request):
         data = request.data
         srz_data = StudentSerializer(data=data)
         if srz_data.is_valid():
-            Student.objects.create(
-                fullname=data["fullname"],
-                score=data["score"]
-            )
+            # Student.objects.create(
+            #     fullname=data["fullname"],
+            #     score=data["score"]
+            # )
+            srz_data.save()
             return Response({"message": "ok"}, status=status.HTTP_201_CREATED)
         else:
             return Response({"message": "validation error"}, status=status.HTTP_400_BAD_REQUEST)
@@ -57,10 +62,27 @@ class EnrollApiView(APIView):
         return Response({"message": "course added"}, status=status.HTTP_200_OK)
 
 
+class TeacherViewset(ModelViewSet):
+    queryset = Teacher.objects.all()
+    serializer_class = TeacherSerializer
+
 class CourseViewset(ModelViewSet):
 
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
+    permission_classes = None
+    pagination_class = NewPagination
+    # renderer_classes 
+    filter_backends = [DjangoFilterBackend]
+    # filterset_fields  = ["is_active", "code"]
+    filterset_class = CourseFilter
+
+    def get_permissions(self):
+        if self.request.method in ["POST", "PUT", "PATCH", "DELETE"]:
+            return [IsAuthenticated(), IsActiveCourse(), IsTeacher()]
+        else:
+            return [IsAuthenticated(), IsActiveCourse()]
+        # return super().get_permissions()
 
     # def retrieve(self, request, pk):
     #     srz_data = self.serializer_class(instance=self.queryset.get(id=pk))

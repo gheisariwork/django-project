@@ -10,6 +10,6 @@ def create_profile_user(sender, instance, created, **kwargs):
     if created:
         # create Profile
         Profile.objects.create(
-            bio = f"{instance.firstname} bio",
+            bio = f"{instance.first_name} bio",
             user=instance
         )

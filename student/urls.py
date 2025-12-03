@@ -9,6 +9,7 @@ app_name = "student"
 router = DefaultRouter()
 
 router.register("all-courses", CourseViewset, basename="all-courses")
+router.register("all-teachers", TeacherViewset, basename="all-teachers")
 
 urlpatterns = [
     path("all-courses/", AllCoursesView.as_view(), name="all-courses"),

@@ -4,14 +4,17 @@ from student.models import *
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
-        fields = ["fullname", "score"]
+        fields = "__all__"
 
 class TeacherSerializer(serializers.ModelSerializer):
-    # courses = CourseSerializer(many=True)
+    courses = serializers.SerializerMethodField()
 
     class Meta:
         model = Teacher
-        fields = ["fullname", "score"]
+        fields = ["fullname", "score", "courses"]
+
+    def get_courses(self, obj):
+        return obj.courses.values()
 
 
 class CourseSerializer(serializers.ModelSerializer):
