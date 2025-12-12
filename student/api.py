@@ -11,6 +11,7 @@ from student.permissions import *
 from student.paginations import NewPagination
 from django_filters.rest_framework import DjangoFilterBackend
 from student.filters import CourseFilter
+from django.core.management import call_command
 # from django_filters.filters import 
 
 class AllStudentApiView(APIView):
@@ -70,18 +71,19 @@ class CourseViewset(ModelViewSet):
 
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
-    permission_classes = None
+    permission_classes = [IsAuthenticated, ModifyCourse]
     pagination_class = NewPagination
+    # authentication_classes = []
     # renderer_classes 
     filter_backends = [DjangoFilterBackend]
     # filterset_fields  = ["is_active", "code"]
     filterset_class = CourseFilter
 
-    def get_permissions(self):
-        if self.request.method in ["POST", "PUT", "PATCH", "DELETE"]:
-            return [IsAuthenticated(), IsActiveCourse(), IsTeacher()]
-        else:
-            return [IsAuthenticated(), IsActiveCourse()]
+    # def get_permissions(self):
+    #     if self.request.method in ["POST", "PUT", "PATCH", "DELETE"]:
+    #         return [IsAuthenticated(), IsActiveCourse(), IsTeacher()]
+    #     else:
+    #         return [IsAuthenticated(), IsActiveCourse()]
         # return super().get_permissions()
 
     # def retrieve(self, request, pk):
@@ -104,6 +106,7 @@ class CourseViewset(ModelViewSet):
 
     @action(detail=False)
     def is_active_list(self, request):
+        request.user.has_permision("can_drive")
         q = Course.objects.filter(is_active=True)
         srz_data = self.serializer_class(instance=q, many=True)
         return Response(srz_data.data)

@@ -10,12 +10,12 @@ def create_profile_user(sender, instance, created, **kwargs):
         if instance.is_student:
             # create Student
             Student.objects.create(
-                fullname= f"{instance.user.firstname} {instance.user.last_name}",
+                fullname= f"{instance.user.first_name} {instance.user.last_name}",
                 profile= instance
             )
         else:
             # create Teacher
             Teacher.objects.create(
-                fullname= f"{instance.user.firstname} {instance.user.last_name}",
+                fullname= f"{instance.user.first_name} {instance.user.last_name}",
                 profile= instance
             )

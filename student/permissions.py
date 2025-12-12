@@ -1,4 +1,5 @@
 from rest_framework.permissions import BasePermission
+from django.db import models
 
 class IsStudent(BasePermission):
 
@@ -15,3 +16,16 @@ class IsActiveCourse(BasePermission):
     message = "اجازه ندارد"
     def has_object_permission(self, request, view, obj):
         return obj.is_active
+    
+class ModifyCourse(BasePermission):
+    message = "اجازه ندارد"
+    def has_object_permission(self, request, view, obj):
+        return obj.teacher.profile.user.id == request.user.idپ
+    
+class PermissionModels(models.Model):
+    class Meta:
+        permissions = (
+            ("can_drive", "Can drive"),
+            ("can_vote", "Can vote in elections"),
+            ("can_drink", "Can drink alcohol"),
+        )

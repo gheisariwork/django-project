@@ -1,6 +1,8 @@
 from rest_framework import serializers
 from student.models import *
-1
+from datetime import date
+from rest_framework.validators import ValidationError
+
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Student
@@ -30,3 +32,19 @@ class CourseSerializer(serializers.ModelSerializer):
     def get_students(self, obj):
         result = obj.students.values("fullname", "score")
         return result
+    
+    def create(self, validated_data):
+        # validated_data["title"] = validated_data["title"] + "1404"
+        my_instance = super().create(validated_data)
+        my_instance.start_date = date.today()
+        my_instance.save()
+        return my_instance
+    
+    # def update(self, instance, validated_data):
+    #     request = self.context.get("request")
+    #     print(request.user.id)
+    #     print(instance.teacher.profile.user.id)
+    #     if request.user.id == instance.teacher.profile.user.id:
+    #         return super().update(instance, validated_data)
+    #     else:
+    #         raise ValidationError("Access Error")

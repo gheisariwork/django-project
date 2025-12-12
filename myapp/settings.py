@@ -1,4 +1,7 @@
 from pathlib import Path
+from datetime import timedelta
+from dotenv import load_dotenv
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,12 +11,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-_xwiv0f*&v^afym=nal#+es1&rf_ws5l3&)uxr8#y-7c!%!3bu'
+SECRET_KEY = "django-insecure-_xwiv0f*&v^afym=nal#+es1&rf_ws5l3&)uxr8#y-7c!%!3bu"
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -27,6 +30,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'django_filters',
+    'django_crontab',
+    'rest_framework_simplejwt',
+    'drf_yasg',
     'todo',
     'student',
     'account',
@@ -77,8 +83,8 @@ DATABASES = {
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'djangodb',
-#         'USER': 'postgres',
+#         'NAME': 'load_dotenv("DBNAME")',
+#         'USER': 'load_dotenv("DBUSER")',
 #         'PASSWORD': 'postgres',
 #         'HOST': '127.0.0.1',
 #         'PORT': '5433',
@@ -89,9 +95,25 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
     ],   
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'rest_framework_simplejwt.authentication.JWTAuthentication',
+    # ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 1
+    'PAGE_SIZE': 1,
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    }
 }
+
+SIMPLE_JWT = { 
+       'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  
+       'REFRESH_TOKEN_LIFETIME': timedelta(days=7)
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -140,3 +162,8 @@ MEDIA_URL = "/media/"
 LOGIN_URL = "/account/user-login/"
 
 # AUTH_USER = "account.models.User"
+
+
+CRONJOBS = [
+    ('10 2 * * *', 'django.core.management.call_command', ['test1']),
+]
