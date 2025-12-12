@@ -139,7 +139,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'Iran'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
@@ -161,7 +161,7 @@ MEDIA_ROOT = f"{BASE_DIR}/media/"
 MEDIA_URL = "/media/"
 LOGIN_URL = "/account/user-login/"
 
-# AUTH_USER = "account.models.User"
+AUTH_USER_MODEL = "account.User"
 
 
 CRONJOBS = [
